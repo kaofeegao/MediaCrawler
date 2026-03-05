@@ -22,7 +22,7 @@
 # @Time    : 2023/12/2 13:45
 # @Desc    : IP proxy pool implementation
 import random
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 import httpx
 from tenacity import retry, stop_after_attempt, wait_fixed
@@ -31,6 +31,7 @@ import config
 from proxy.providers import (
     new_kuai_daili_proxy,
     new_wandou_http_proxy,
+    new_local_ip_provider,
 )
 from tools import utils
 
@@ -55,7 +56,7 @@ class ProxyIpPool:
         self.enable_validate_ip = enable_validate_ip
         self.proxy_list: List[IpInfoModel] = []
         self.ip_provider: ProxyProvider = ip_provider
-        self.current_proxy: IpInfoModel | None = None  # Currently used proxy
+        self.current_proxy: Optional[IpInfoModel] = None  # Currently used proxy
 
     async def load_proxies(self) -> None:
         """
@@ -152,6 +153,7 @@ class ProxyIpPool:
 IpProxyProvider: Dict[str, ProxyProvider] = {
     ProviderNameEnum.KUAI_DAILI_PROVIDER.value: new_kuai_daili_proxy(),
     ProviderNameEnum.WANDOU_HTTP_PROVIDER.value: new_wandou_http_proxy(),
+    "local": new_local_ip_provider(),
 }
 
 
@@ -172,4 +174,3 @@ async def create_ip_pool(ip_pool_count: int, enable_validate_ip: bool) -> ProxyI
 
 
 if __name__ == "__main__":
-    pass

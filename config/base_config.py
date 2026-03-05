@@ -19,21 +19,27 @@
 
 # Basic configuration
 PLATFORM = "xhs"  # Platform, xhs | dy | ks | bili | wb | tieba | zhihu
-KEYWORDS = "编程副业,编程兼职"  # Keyword search configuration, separated by English commas
+KEYWORDS = "北京儿童剧推荐"  # Keyword search configuration, separated by English commas
 LOGIN_TYPE = "qrcode"  # qrcode or phone or cookie
 COOKIES = ""
 CRAWLER_TYPE = (
     "search"  # Crawling type, search (keyword search) | detail (post details) | creator (creator homepage data)
 )
 # Whether to enable IP proxy
-ENABLE_IP_PROXY = False
+ENABLE_IP_PROXY = False  # Set to False to disable proxy functionality
+
+# Whether to enable IP proxy rotation
+ENABLE_IP_PROXY_ROTATION = True # Changed to True for better anti-detection
 
 # Number of proxy IP pools
-IP_PROXY_POOL_COUNT = 2
+IP_PROXY_POOL_COUNT = 5  # Increased from 2 to 5 for better rotation
 
 # Proxy IP provider name
-IP_PROXY_PROVIDER_NAME = "kuaidaili"  # kuaidaili | wandouhttp
+IP_PROXY_PROVIDER_NAME = "kuaidaili"  # kuaidaili | wandouhttp | local
 
+# Local IP list configuration
+LOCAL_IP_LIST_PATH = ""  # Path to local IP list file (e.g., "./ip_list.txt")
+LOCAL_IP_LIST_FORMAT = "ip:port"  # Format of IP list: "ip:port" or "ip:port:user:pass"
 # Setting to True will not open the browser (headless browser)
 # Setting False will open a browser
 # If Xiaohongshu keeps scanning the code to log in but fails, open the browser and manually pass the sliding verification code.
@@ -85,14 +91,17 @@ START_PAGE = 1
 # Control the number of crawled videos/posts
 CRAWLER_MAX_NOTES_COUNT = 15
 
+# Search sort type: GENERAL/MOST_POPULAR/LATEST
+SORT_TYPE = "LATEST"
+
 # Controlling the number of concurrent crawlers
-MAX_CONCURRENCY_NUM = 1
+MAX_CONCURRENCY_NUM = 2  # Reduced from 1 to 2 for better performance
 
 # Whether to enable crawling media mode (including image or video resources), crawling media is not enabled by default
 ENABLE_GET_MEIDAS = False
 
 # Whether to enable comment crawling mode. Comment crawling is enabled by default.
-ENABLE_GET_COMMENTS = True
+ENABLE_GET_COMMENTS = False
 
 # Control the number of crawled first-level comments (single video/post)
 CRAWLER_MAX_COMMENTS_COUNT_SINGLENOTES = 10
@@ -117,8 +126,41 @@ STOP_WORDS_FILE = "./docs/hit_stopwords.txt"
 # Chinese font file path
 FONT_PATH = "./docs/STZHONGS.TTF"
 
-# Crawl interval
-CRAWLER_MAX_SLEEP_SEC = 2
+# Crawl interval - changed to variable timing
+CRAWLER_MIN_SLEEP_SEC = 3  # Minimum sleep interval
+CRAWLER_MAX_SLEEP_SEC = 10  # Maximum sleep interval (increased from 5)
+
+# Anti-crawler specific configurations
+XHS_USER_AGENT_POOL = [
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Safari/605.1.15",
+    "Mozilla/5.0 (iPhone; CPU iPhone OS 14_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1",
+    "Mozilla/5.0 (Linux; Android 11; SM-G975F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.120 Mobile Safari/537.36"
+]
+
+# Enhanced headers configuration
+XHS_DEFAULT_HEADERS = {
+    "accept": "application/json, text/plain, */*",
+    "accept-language": "zh-CN,zh;q=0.9",
+    "cache-control": "no-cache",
+    "content-type": "application/json;charset=UTF-8",
+    "origin": "https://www.xiaohongshu.com",
+    "pragma": "no-cache",
+    "priority": "u=1, i",
+    "referer": "https://www.xiaohongshu.com/",
+    "sec-ch-ua": '"Chromium";v="136", "Google Chrome";v="136", "Not.A/Brand";v="99"',
+    "sec-ch-ua-mobile": "?0",
+    "sec-ch-ua-platform": '"Windows"',
+    "sec-fetch-dest": "empty",
+    "sec-fetch-mode": "cors",
+    "sec-fetch-site": "same-site",
+    "user-agent": "",  # Will be dynamically set
+    "sec-fetch-user": "?1",
+    "dnt": "1",
+    "upgrade-insecure-requests": "1",
+    "sec-gpc": "1"
+}
 
 from .bilibili_config import *
 from .xhs_config import *

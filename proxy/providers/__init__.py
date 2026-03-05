@@ -25,3 +25,12 @@
 from .jishu_http_proxy import new_jisu_http_proxy
 from .kuaidl_proxy import new_kuai_daili_proxy
 from .wandou_http_proxy import new_wandou_http_proxy
+from .local import new_local_ip_provider, LocalIpProvider
+def new_local_ip_provider(file_path: str = "", format_type: str = "ip:port"):
+    """
+    Create a new local IP provider
+    :param file_path: Path to local IP list file
+    :param format_type: Format of IP list (ip:port or ip:port:user:pass)
+    :return: LocalIpProvider instance
+    """
+    return LocalIpProvider(file_path, format_type)
