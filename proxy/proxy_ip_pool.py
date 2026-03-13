@@ -174,3 +174,4 @@ async def create_ip_pool(ip_pool_count: int, enable_validate_ip: bool) -> ProxyI
 
 
 if __name__ == "__main__":
+    pass
